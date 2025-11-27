@@ -2,57 +2,127 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Star Rating Widget - White Theme</title>
+<title>Star Rating Widget</title>
+
 <style>
-body {
-  font-family: Arial;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  background: transparent;
-}
-.rating {
-  background: #ffffff;
-  padding: 10px 20px;
-  border-radius: 20px;
-  display: inline-flex;
-  gap: 8px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-}
-.rating span {
-  font-size: 35px;
-  color: #ccc;
-  cursor: pointer;
-  transition: 0.25s;
-}
-.rating span.selected,
-.rating span:hover,
-.rating span:hover ~ span {
-  color: #ffb400;
-}
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background: #ffffff;
+    }
+
+    .rating-box {
+        background: #ffffff;
+        padding: 20px 25px;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: 0.3s ease-in-out;
+        animation: pop 0.5s ease;
+    }
+
+    @keyframes pop {
+        0% { transform: scale(0.8); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .stars {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .star {
+        font-size: 40px;
+        color: #ddd;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .star:hover {
+        transform: scale(1.2);
+        color: gold;
+    }
+
+    .selected {
+        color: gold !important;
+        transform: scale(1.1);
+    }
+
+    button {
+        background: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 18px;
+        transition: 0.2s;
+    }
+
+    button:hover {
+        background: #43a047;
+        transform: scale(1.05);
+    }
 </style>
+
 </head>
 <body>
-<div class="rating">
-  <span data-star="5">★</span>
-  <span data-star="4">★</span>
-  <span data-star="3">★</span>
-  <span data-star="2">★</span>
-  <span data-star="1">★</span>
+
+<div class="rating-box">
+    <div class="stars" id="stars">
+        <span class="star" data-value="1">★</span>
+        <span class="star" data-value="2">★</span>
+        <span class="star" data-value="3">★</span>
+        <span class="star" data-value="4">★</span>
+        <span class="star" data-value="5">★</span>
+    </div>
+    
+    <button onclick="submitRating()">Submit</button>
 </div>
 
+
 <script>
-const stars = document.querySelectorAll('.rating span');
-stars.forEach(star => {
-  star.addEventListener('click', () => {
-    stars.forEach(s => s.classList.remove('selected'));
-    star.classList.add('selected');
-    let rating = star.getAttribute('data-star');
-    console.log("Selected Rating:", rating);
-  });
-});
+    let selectedRating = 0;
+    const stars = document.querySelectorAll(".star");
+
+    stars.forEach((star) => {
+        star.addEventListener("mouseover", () => {
+            resetStars();
+            highlightStars(star.dataset.value);
+        });
+
+        star.addEventListener("click", () => {
+            selectedRating = star.dataset.value;
+            lockStars();
+        });
+    });
+
+    function resetStars() {
+        stars.forEach(s => s.classList.remove("selected"));
+    }
+
+    function highlightStars(count) {
+        for (let i = 0; i < count; i++) {
+            stars[i].classList.add("selected");
+        }
+    }
+
+    function lockStars() {
+        resetStars();
+        highlightStars(selectedRating);
+        stars.forEach(s => s.style.pointerEvents = "none"); 
+    }
+
+    function submitRating() {
+        alert("Thanks! Your rating: " + selectedRating + " Stars");
+    }
 </script>
+
 </body>
 </html>
